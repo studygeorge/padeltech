@@ -1,0 +1,132 @@
+2025-07-10 16:50:45 +03:00: 🔧 Конфигурация базы данных:
+2025-07-10 16:50:45 +03:00: DB_HOST исходное значение: "127.0.0.1"
+2025-07-10 16:50:45 +03:00: DB_NAME исходное значение: "u3188490_default"
+2025-07-10 16:50:45 +03:00: DB_USER исходное значение: "u3188490_default"
+2025-07-10 16:50:45 +03:00: DB_PORT исходное значение: "3306"
+2025-07-10 16:50:45 +03:00: 🔧 Обработанные значения:
+2025-07-10 16:50:45 +03:00: Host: "127.0.0.1"
+2025-07-10 16:50:45 +03:00: Port: 3306
+2025-07-10 16:50:45 +03:00: User: "u3188490_default"
+2025-07-10 16:50:45 +03:00: Database: "u3188490_default"
+2025-07-10 16:50:45 +03:00: Has Password: true
+2025-07-10 16:50:46 +03:00: 🔌 Подключение к базе данных...
+2025-07-10 16:50:46 +03:00: 🔧 Переменные окружения БД:
+2025-07-10 16:50:46 +03:00: DB_HOST: "127.0.0.1"
+2025-07-10 16:50:46 +03:00: DB_NAME: "u3188490_default"
+2025-07-10 16:50:46 +03:00: DB_USER: "u3188490_default"
+2025-07-10 16:50:46 +03:00: DB_PORT: "3306"
+2025-07-10 16:50:46 +03:00: typeof DB_HOST: string
+2025-07-10 16:50:46 +03:00: 📊 Конфигурация БД: {
+2025-07-10 16:50:46 +03:00:   host: '127.0.0.1',
+2025-07-10 16:50:46 +03:00:   database: 'u3188490_default',
+2025-07-10 16:50:46 +03:00:   user: 'u3188490_default',
+2025-07-10 16:50:46 +03:00:   port: '3306',
+2025-07-10 16:50:46 +03:00:   hasPassword: true
+2025-07-10 16:50:46 +03:00: }
+2025-07-10 16:50:46 +03:00: ✅ База данных успешно подключена
+2025-07-10 16:50:46 +03:00: 🔄 Синхронизация моделей с базой данных...
+2025-07-10 16:50:47 +03:00: ✅ Все модели синхронизированы с базой данных
+2025-07-10 16:50:47 +03:00: 📋 Созданные таблицы: [
+2025-07-10 16:50:47 +03:00:   'americano_games',
+2025-07-10 16:50:47 +03:00:   'americano_matches',
+2025-07-10 16:50:47 +03:00:   'americano_players',
+2025-07-10 16:50:47 +03:00:   'match_players',
+2025-07-10 16:50:47 +03:00:   'match_scores',
+2025-07-10 16:50:47 +03:00:   'matches',
+2025-07-10 16:50:47 +03:00:   'tournament_pairs',
+2025-07-10 16:50:47 +03:00:   'tournaments',
+2025-07-10 16:50:47 +03:00:   'users'
+2025-07-10 16:50:47 +03:00: ]
+2025-07-10 16:50:47 +03:00: 🚀 Сервер запущен на порту 3000
+2025-07-10 16:50:47 +03:00: 🌐 Режим: production
+2025-07-10 16:50:47 +03:00: 🔗 API доступно по адресу: http://localhost:3000
+2025-07-10 16:51:01 +03:00: 🚀 Telegram auth request received
+2025-07-10 16:51:01 +03:00: 📦 Request body: {
+2025-07-10 16:51:01 +03:00:   id: 396717696,
+2025-07-10 16:51:01 +03:00:   first_name: 'Гео',
+2025-07-10 16:51:01 +03:00:   username: 'manageryandi',
+2025-07-10 16:51:01 +03:00:   photo_url: 'https://t.me/i/userpic/320/lHMsOyClrMQI1-DR-PfOBmqFYR0dRdt9U2VhE2H21mU.jpg',
+2025-07-10 16:51:01 +03:00:   auth_date: 1752155460,
+2025-07-10 16:51:01 +03:00:   hash: '24b90067d670463f10fbd9bbad21a9e0da6193a1c3c38ad191324c0a4cbc042f'
+2025-07-10 16:51:01 +03:00: }
+2025-07-10 16:51:01 +03:00: 🔍 Checking if user exists in database...
+2025-07-10 16:51:01 +03:00: ✅ User found in database
+2025-07-10 16:51:01 +03:00: 📝 User data updated
+2025-07-10 16:51:01 +03:00: 🎫 Generating JWT token...
+2025-07-10 16:51:01 +03:00: ✅ Auth successful, sending response
+2025-07-10 16:56:46 +03:00: 🚀 Telegram auth request received
+2025-07-10 16:56:46 +03:00: 📦 Request body: {
+2025-07-10 16:56:46 +03:00:   id: 5525020749,
+2025-07-10 16:56:46 +03:00:   first_name: 'George',
+2025-07-10 16:56:46 +03:00:   username: 'workgeorgy',
+2025-07-10 16:56:46 +03:00:   photo_url: 'https://t.me/i/userpic/320/LXm-xaN612C9mRit_FBNnFiTsBtzUuQfdz8-TSexkaZbrObc2wNvWP1nWCGUik2w.jpg',
+2025-07-10 16:56:46 +03:00:   auth_date: 1752155805,
+2025-07-10 16:56:46 +03:00:   hash: '8279313292acc9114a5a1c56e36f5cb1e6fb887c88e38dc3d1cea1f1678de017'
+2025-07-10 16:56:46 +03:00: }
+2025-07-10 16:56:46 +03:00: 🔍 Checking if user exists in database...
+2025-07-10 16:56:46 +03:00: 🆕 User not found, creating new user...
+2025-07-10 16:56:46 +03:00: ✅ New user created with ID: 2
+2025-07-10 16:56:46 +03:00: 🎫 Generating JWT token...
+2025-07-10 16:56:46 +03:00: ✅ Auth successful, sending response
+2025-07-10 16:56:50 +03:00: 🔐 Auth middleware started
+2025-07-10 16:56:50 +03:00: 📋 Authorization header: Present
+2025-07-10 16:56:50 +03:00: 🔍 Token found, length: 251
+2025-07-10 16:56:50 +03:00: 🔍 Token preview: eyJhbGciOiJIUzI1NiIs...
+2025-07-10 16:56:50 +03:00: ✅ Token decoded successfully: { id: 2, username: 'workgeorgy' }
+2025-07-10 16:56:50 +03:00: 👤 Looking for user with ID: 2
+2025-07-10 16:56:50 +03:00: 👤 User query completed, found: 1 users
+2025-07-10 16:56:50 +03:00: ✅ User found: { id: 2, username: 'workgeorgy', telegram_id: 5525020749 }
+2025-07-10 16:56:50 +03:00: ✅ User attached to request object
+2025-07-10 16:56:50 +03:00: 🔧 Complete registration started
+2025-07-10 16:56:50 +03:00: 🔍 Request object keys: [
+2025-07-10 16:56:50 +03:00:   '_readableState',   '_events',
+2025-07-10 16:56:50 +03:00:   '_eventsCount',     '_maxListeners',
+2025-07-10 16:56:50 +03:00:   'socket',           'httpVersionMajor',
+2025-07-10 16:56:50 +03:00:   'httpVersionMinor', 'httpVersion',
+2025-07-10 16:56:50 +03:00:   'complete',         'rawHeaders',
+2025-07-10 16:56:50 +03:00:   'rawTrailers',      'joinDuplicateHeaders',
+2025-07-10 16:56:50 +03:00:   'aborted',          'upgrade',
+2025-07-10 16:56:50 +03:00:   'url',              'method',
+2025-07-10 16:56:50 +03:00:   'statusCode',       'statusMessage',
+2025-07-10 16:56:50 +03:00:   'client',           '_consuming',
+2025-07-10 16:56:50 +03:00:   '_dumped',          'next',
+2025-07-10 16:56:50 +03:00:   'baseUrl',          'originalUrl',
+2025-07-10 16:56:50 +03:00:   '_parsedUrl',       'params',
+2025-07-10 16:56:50 +03:00:   'query',            'res',
+2025-07-10 16:56:50 +03:00:   'body',             '_body',
+2025-07-10 16:56:50 +03:00:   'length',           'route',
+2025-07-10 16:56:50 +03:00:   'user'
+2025-07-10 16:56:50 +03:00: ]
+2025-07-10 16:56:50 +03:00: 👤 req.user exists: true
+2025-07-10 16:56:50 +03:00: 👤 req.user: { id: 2, username: 'workgeorgy', telegram_id: 5525020749 }
+2025-07-10 16:56:50 +03:00: 📦 Request body: { level: 'D', gender: 'male' }
+2025-07-10 16:56:50 +03:00: 🔧 Proceeding with registration completion for user ID: 2 with data: { level: 'D', gender: 'male' }
+2025-07-10 16:56:50 +03:00: 🔄 Executing SQL update...
+2025-07-10 16:56:50 +03:00: ✅ SQL update completed, result: [ undefined, 1 ]
+2025-07-10 16:56:50 +03:00: 🔄 Fetching updated user...
+2025-07-10 16:56:50 +03:00: ✅ Updated user retrieved: { id: 2, level: 'D', gender: 'male', registration_completed: 1 }
+2025-07-10 16:56:50 +03:00: ✅ Sending successful response
+2025-07-10 17:07:04 +03:00: 🔐 Auth middleware started
+2025-07-10 17:07:04 +03:00: 📋 Authorization header: Present
+2025-07-10 17:07:04 +03:00: 🔍 Token found, length: 251
+2025-07-10 17:07:04 +03:00: 🔍 Token preview: eyJhbGciOiJIUzI1NiIs...
+2025-07-10 17:07:04 +03:00: ✅ Token decoded successfully: { id: 2, username: 'workgeorgy' }
+2025-07-10 17:07:04 +03:00: 👤 Looking for user with ID: 2
+2025-07-10 17:07:04 +03:00: 👤 User query completed, found: 1 users
+2025-07-10 17:07:04 +03:00: ✅ User found: { id: 2, username: 'workgeorgy', telegram_id: 5525020749 }
+2025-07-10 17:07:04 +03:00: ✅ User attached to request object
+2025-07-10 17:07:04 +03:00: ✅ Player level updated: { userId: '1', level: 'C+' }
+2025-07-10 17:22:16 +03:00: 🚀 Telegram auth request received
+2025-07-10 17:22:16 +03:00: 📦 Request body: {
+2025-07-10 17:22:16 +03:00:   id: 5525020749,
+2025-07-10 17:22:16 +03:00:   first_name: 'George',
+2025-07-10 17:22:16 +03:00:   username: 'workgeorgy',
+2025-07-10 17:22:16 +03:00:   photo_url: 'https://t.me/i/userpic/320/LXm-xaN612C9mRit_FBNnFiTsBtzUuQfdz8-TSexkaZbrObc2wNvWP1nWCGUik2w.jpg',
+2025-07-10 17:22:16 +03:00:   auth_date: 1752157336,
+2025-07-10 17:22:16 +03:00:   hash: '60607cdb147a22c03124f952d9f6ee4623a9214aa3aad1ce43d2829671b3316e'
+2025-07-10 17:22:16 +03:00: }
+2025-07-10 17:22:16 +03:00: 🔍 Checking if user exists in database...
+2025-07-10 17:22:16 +03:00: ✅ User found in database
+2025-07-10 17:22:16 +03:00: 📝 User data updated
+2025-07-10 17:22:16 +03:00: 🎫 Generating JWT token...
+2025-07-10 17:22:16 +03:00: ✅ Auth successful, sending response
