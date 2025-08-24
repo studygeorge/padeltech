@@ -1,13 +1,22 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 
-import './assets/main.css'
+// Обработка динамической высоты viewport для мобильных устройств
+function updateViewportHeight() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
 
-const app = createApp(App)
+// Инициализация и обновление при изменении размеров
+updateViewportHeight();
+window.addEventListener('resize', updateViewportHeight);
+window.addEventListener('orientationchange', () => {
+  setTimeout(updateViewportHeight, 100);
+});
 
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+createApp(App)
+  .use(store)
+  .use(router)
+  .mount('#app')

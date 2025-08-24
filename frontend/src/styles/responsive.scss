@@ -1,0 +1,40 @@
+.container {
+  width: 100%;
+  padding: 0 $spacing-medium;
+  margin: 0 auto;
+  
+  @media (min-width: $breakpoint-mobile) {
+    max-width: 480px;
+  }
+  
+  @media (min-width: $breakpoint-tablet) {
+    max-width: 720px;
+  }
+  
+  @media (min-width: $breakpoint-desktop) {
+    max-width: 960px;
+  }
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.hide-on-mobile {
+  @media (max-width: $breakpoint-mobile) {
+    display: none;
+  }
+}
+
+.hide-on-tablet {
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.show-on-mobile {
+  @media (min-width: $breakpoint-mobile + 1) {
+    display: none;
+  }
+}

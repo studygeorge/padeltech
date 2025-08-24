@@ -1,0 +1,39 @@
+@font-face {
+  font-family: 'ComicFont';
+  // В будущем здесь будет путь к вашему шрифту
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'ComicFont', 'Arial', sans-serif;
+  color: $text-color;
+}
+
+h1 {
+  font-size: $font-size-large * 1.5;
+  margin-bottom: $spacing-medium;
+}
+
+h2 {
+  font-size: $font-size-large;
+  margin-bottom: $spacing-medium;
+}
+
+p {
+  font-size: $font-size-normal;
+  line-height: 1.5;
+  margin-bottom: $spacing-medium;
+}
+
+.text-primary {
+  color: $primary-color;
+}
+
+.text-secondary {
+  color: $secondary-color;
+}
+
+.text-accent {
+  color: $accent-color;
+}

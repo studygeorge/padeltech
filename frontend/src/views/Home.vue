@@ -1,424 +1,681 @@
+
 <template>
-  <section class="home-container">
-    <!-- Заголовок -->
-    <div class="page-header">
-      <h1>Турниры и тренировки по паделу</h1>
-      <p class="page-subtitle">
-        Присоединяйтесь к нашим турнирам и станьте частью 
-        падел-сообщества! Участвуйте в захватывающих матчах и 
-        наслаждайтесь динамикой спорта вместе с другими 
-        фанатами игры в падел.
-      </p>
-    </div>
-
-    <!-- Авторизация -->
-    <div v-if="!authStore.isAuthenticated" class="auth-section">
-      <Button variant="primary" @click="showLoginModal = true">
-        Войти через Telegram
-      </Button>
-    </div>
-    
-    <!-- Для неавторизованных пользователей тоже показываем турниры -->
-    <template v-else>
-      <!-- Показываем кнопку завершения регистрации если не завершена -->
-      <div v-if="!authStore.user?.registrationCompleted" class="registration-prompt">
-        <p>Завершите регистрацию для участия в турнирах</p>
-        <Button variant="primary" @click="showRegistrationModal = true">
-          Завершить регистрацию
-        </Button>
-      </div>
-    </template>
-
-    <!-- Секция турниров -->
-    <div class="tournaments-section">
-      <div class="section-header">
-        <h2>{{ upcomingTournaments.length }} турниров</h2>
-        <div class="filters">
-          <button class="filter-btn active">Показать ближайшие</button>
-        </div>
-      </div>
-
-      <Loading v-if="isLoadingTournaments" text="Загрузка турниров..." />
-      
-      <ErrorAlert v-else-if="tournamentsError" :error="tournamentsError" />
-      
-      <div v-else-if="upcomingTournaments.length === 0" class="no-tournaments">
-        <p>Нет запланированных турниров</p>
-      </div>
-      
-      <div v-else class="tournaments-list">
-        <div 
-          v-for="tournament in upcomingTournaments" 
-          :key="tournament.id"
-          class="tournament-card"
-          @click="goToTournament(tournament.id)"
-        >
-          <div class="tournament-time">
-            {{ formatTournamentTime(tournament.tournamentDate) }}
-          </div>
-          
-          <div class="tournament-content">
-            <h3 class="tournament-name">{{ tournament.name }}</h3>
-            <div class="tournament-details">
-              <span>{{ tournament.description || 'Турнир' }}</span>
-              <span>•</span>
-              <span>{{ getStatusText(tournament.status) }}</span>
-              <span v-if="tournament.availableSlots <= 3" class="limited-spots">
-                • осталось {{ tournament.availableSlots }}
-                <svg width="12" height="12" fill="#dc2626" viewBox="0 0 16 16">
-                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                </svg>
-              </span>
-            </div>
-          </div>
-          
-          <div class="tournament-participants">
-            <div class="participants-avatars">
-              <div 
-                v-for="(participant, index) in tournament.participants.slice(0, 3)" 
-                :key="participant.id"
-                class="participant-avatar"
-                :style="{ zIndex: 3 - index }"
-              >
-                <img v-if="participant.photo_url" :src="participant.photo_url" :alt="participant.first_name">
-                <span v-else class="avatar-fallback">{{ participant.first_name?.[0] || 'U' }}</span>
+  <!-- Основной контент Home БЕЗ дополнительных лоадеров -->
+  <VideoBackground videoName="welcome" @video-ready="onVideoReady">
+    <!-- БЛЮРЕННЫЙ КОНТЕНТ-ОВЕРЛЕЙ С АНИМАЦИЕЙ -->
+    <div 
+      class="content-overlay-slide"
+      :class="{ 
+        'slide-up': contentVisible,
+        'slide-down': !contentVisible,
+        'mobile-overlay': isMobile,
+        'desktop-overlay': !isMobile
+      }"
+    >
+      <div class="home-content" :class="{ 'mobile-layout': isMobile, 'desktop-layout': !isMobile }">
+        
+        <!-- МОБИЛЬНАЯ ВЕРСИЯ - АДАПТИРОВАНА ПОД 20% ЭКРАНА -->
+        <template v-if="isMobile">
+          <div class="mobile-content-wrapper">
+            <div class="mobile-form-section">
+              <p class="game-description mobile-description">
+                An exciting journey into mathematics!
+              </p>
+              
+              <div class="player-form">
+                <AppButton 
+                  type="primary" 
+                  fullWidth
+                  @click="startAdventure"
+                  :disabled="isStarting || !videoReady"
+                  class="start-button"
+                >
+                  {{ isStarting ? 'Starting...' : !videoReady ? 'Loading...' : 'Start Adventure' }}
+                </AppButton>
               </div>
             </div>
-            <div class="participants-count">{{ tournament.occupiedSlots }}/{{ tournament.totalSlots }} игроков</div>
           </div>
-        </div>
+        </template>
+        
+        <!-- ДЕСКТОПНАЯ ВЕРСИЯ - НОВАЯ АДАПТИВНАЯ СТРУКТУРА -->
+        <template v-else>
+          <div class="desktop-home-content">
+            <div class="desktop-home-container">
+              <h1 class="game-title desktop-title">AdaptSmart</h1>
+              <p class="game-description desktop-description">
+                An exciting journey into the world of mathematics with Fluffy the kitten!
+              </p>
+              
+              <div class="player-form desktop-form">
+                <AppButton 
+                  type="primary" 
+                  large 
+                  @click="startAdventure"
+                  :disabled="isStarting || !videoReady"
+                  class="desktop-start-button"
+                >
+                  {{ isStarting ? 'Starting...' : !videoReady ? 'Loading...' : 'Start Adventure' }}
+                </AppButton>
+              </div>
+            </div>
+          </div>
+        </template>
+        
       </div>
     </div>
-
-    <LoginModal 
-      :show="showLoginModal"
-      @close="showLoginModal = false"
-      @success="handleLoginSuccess"
-    />
-
-    <RegistrationModal
-      :show="showRegistrationModal"
-      @completed="handleRegistrationCompleted"
-      @close="showRegistrationModal = false"
-    />
-  </section>
+  </VideoBackground>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
+<script>
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import Button from '@/components/ui/Button.vue'
-import Loading from '@/components/ui/Loading.vue'
-import ErrorAlert from '@/components/ui/ErrorAlert.vue'
-import LoginModal from '@/components/auth/LoginModal.vue'
-import RegistrationModal from '@/components/auth/RegistrationModal.vue'
+import AppButton from '@/components/common/AppButton.vue'
+import VideoBackground from '@/components/game/VideoBackground.vue'
+import { getDeviceType } from '@/utils/responsive'
 
-const router = useRouter()
-const authStore = useAuthStore()
-const showLoginModal = ref(false)
-const showRegistrationModal = ref(false)
-
-// Состояние турниров
-const upcomingTournaments = ref([])
-const isLoadingTournaments = ref(false)
-const tournamentsError = ref(null)
-
-// Загрузка турниров
-const loadTournaments = async () => {
-  try {
-    isLoadingTournaments.value = true
-    tournamentsError.value = null
+export default {
+  name: 'HomePage',
+  components: {
+    AppButton,
+    VideoBackground
+  },
+  setup() {
+    const store = useStore()
+    const router = useRouter()
+    const isStarting = ref(false)
+    const videoReady = ref(false)
+    const contentVisible = ref(false)
     
-    const response = await fetch('/api/tournaments/upcoming')
-    if (!response.ok) {
-      throw new Error('Ошибка при загрузке турниров')
+    const isMobile = computed(() => {
+      const deviceType = getDeviceType()
+      return deviceType === 'mobile' || deviceType === 'tablet'
+    })
+    
+    const onVideoReady = () => {
+      videoReady.value = true
+      console.log('Home: Видео welcome готово - все видео уже предзагружены в App.vue!')
+      
+      // ПОКАЗЫВАЕМ контент с задержкой
+      setTimeout(() => {
+        contentVisible.value = true
+      }, 100)
     }
     
-    upcomingTournaments.value = await response.json()
-  } catch (error) {
-    console.error('Error loading tournaments:', error)
-    tournamentsError.value = 'Не удалось загрузить турниры'
-  } finally {
-    isLoadingTournaments.value = false
-  }
-}
-
-// Переход к турниру
-const goToTournament = (tournamentId) => {
-  router.push(`/tournament/${tournamentId}`)
-}
-
-// Форматирование времени турнира
-const formatTournamentTime = (dateString) => {
-  try {
-    // Создаем дату более безопасным способом
-    let date;
-    if (dateString.includes('T')) {
-      // ISO формат
-      date = new Date(dateString);
-    } else if (dateString.includes(' ')) {
-      // MySQL формат "YYYY-MM-DD HH:MM:SS"
-      const [datePart, timePart] = dateString.split(' ');
-      const [year, month, day] = datePart.split('-');
-      const [hour, minute] = timePart.split(':');
-      date = new Date(year, month - 1, day, hour, minute);
-    } else {
-      date = new Date(dateString);
+    const startAdventure = async () => {
+      if (isStarting.value || !videoReady.value) return
+      
+      console.log('Home: Начинаем приключение...')
+      isStarting.value = true
+      
+      try {
+        const playerName = 'Friend'
+        console.log('Home: Устанавливаем имя игрока:', playerName)
+        await store.dispatch('setPlayerName', playerName)
+        
+        console.log('Home: Устанавливаем уровень 1')
+        await store.dispatch('setCurrentLevel', 1)
+        
+        // ПРЯМОЙ переход БЕЗ лоадеров - все видео уже загружены!
+        console.log('Home: Мгновенный переход к комиксу - БЕЗ лоадеров!')
+        router.push('/comic')
+        
+      } catch (error) {
+        console.error('Home: Ошибка при запуске:', error)
+        isStarting.value = false
+      }
     }
     
-    // Проверяем, что дата валидна
-    if (isNaN(date.getTime())) {
-      console.error('Invalid date:', dateString);
-      return 'Неверная дата';
+    onMounted(() => {
+      console.log('Home: Компонент загружен - все видео уже предзагружены в App.vue!')
+    })
+    
+    return {
+      isStarting,
+      videoReady,
+      contentVisible,
+      startAdventure,
+      onVideoReady,
+      isMobile
     }
-    
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    const dayName = date.toLocaleDateString('ru-RU', { weekday: 'short' }).toUpperCase();
-    const dayNumber = date.getDate();
-    const month = date.toLocaleDateString('ru-RU', { month: 'short' }).toUpperCase();
-    const time = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-    
-    return `${dayName} • ${dayNumber} ${month} • ${time}`;
-  } catch (error) {
-    console.error('Error formatting date:', error, dateString);
-    return 'Ошибка даты';
   }
 }
-
-const getStatusText = (status) => {
-  switch (status) {
-    case 'upcoming': return 'Открытый'
-    case 'active': return 'Активный'
-    case 'completed': return 'Завершен'
-    case 'cancelled': return 'Отменен'
-    default: return 'Открытый'
-  }
-}
-
-const handleLoginSuccess = () => {
-  showLoginModal.value = false
-  if (authStore.user && !authStore.user.registrationCompleted) {
-    setTimeout(() => {
-      showRegistrationModal.value = true
-    }, 500)
-  }
-}
-
-const handleRegistrationCompleted = () => {
-  showRegistrationModal.value = false
-}
-
-onMounted(() => {
-  loadTournaments()
-})
 </script>
 
-<style scoped>
-.home-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
+<style lang="scss" scoped>
+@import '@/styles/variables.scss';
 
-.page-header {
-  padding: 32px 0;
-  text-align: left;
-}
-
-.page-header h1 {
-  font-size: 32px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 16px;
-  line-height: 1.2;
-}
-
-.page-subtitle {
-  font-size: 16px;
-  color: #6b7280;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.auth-section {
-  padding: 24px 0;
-  text-align: center;
-}
-
-.registration-prompt {
-  text-align: center;
-  padding: 20px;
-  background: #fef3c7;
-  border-radius: 12px;
-  border: 1px solid #f59e0b;
-  margin-bottom: 32px;
-}
-
-.registration-prompt p {
-  margin-bottom: 16px;
-  color: #92400e;
-}
-
-.tournaments-section {
-  padding: 24px 0;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.section-header h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0;
-}
-
-.filters {
-  display: flex;
-  gap: 8px;
-}
-
-.filter-btn {
-  padding: 8px 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  background: white;
-  color: #6b7280;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.filter-btn.active {
-  background: #1f2937;
-  color: white;
-  border-color: #1f2937;
-}
-
-.no-tournaments {
-  text-align: center;
-  color: #6b7280;
-  padding: 60px 20px;
-}
-
-.tournaments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.tournament-card {
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f3f4f6;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.tournament-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-.tournament-time {
-  font-size: 14px;
-  color: #6366f1;
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
-.tournament-content {
-  margin-bottom: 16px;
-}
-
-.tournament-name {
-  font-size: 20px;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 8px;
-}
-
-.tournament-details {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 4px;
-}
-
-.limited-spots {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #dc2626;
-  font-weight: 500;
-}
-
-.tournament-participants {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.participants-avatars {
-  display: flex;
-  margin-left: -8px;
-}
-
-.participant-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid white;
-  margin-left: -8px;
-  overflow: hidden;
-  background: #f3f4f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.participant-avatar img {
+// === БЛЮРЕННЫЙ ОВЕРЛЕЙ (КАК В ИГРЕ) ===
+.content-overlay-slide {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-
-.avatar-fallback {
-  font-size: 12px;
-  font-weight: 600;
-  color: #6b7280;
-}
-
-.participants-count {
-  font-size: 14px;
-  color: #6b7280;
-}
-
-@media (max-width: 600px) {
-  .page-header h1 {
-    font-size: 28px;
+  position: relative;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  &.slide-up {
+    transform: translateY(0);
   }
   
-  .section-header {
+  &.slide-down {
+    transform: translateY(100%);
+  }
+  
+  &.mobile-overlay {
+    background: rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.desktop-overlay {
+    background: rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.home-content {
+  width: 100%;
+  height: 100%;
+  font-family: $font-family-primary;
+  position: relative;
+  z-index: 300;
+  overflow: hidden !important;
+  
+  // БЕЗ БЛЮРА НА КОНТЕНТЕ!
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+
+// === МОБИЛЬНАЯ ВЕРСИЯ ===
+.mobile-layout {
+  .mobile-content-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 12px 12px 12px;
+    position: relative;
+    z-index: 301;
+    overflow: hidden !important;
   }
   
-  .tournament-card {
-    padding: 16px;
+  .mobile-form-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    max-width: 300px;
+    height: 100%;
+  }
+  
+  .mobile-description {
+    font-size: 14px;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+  
+  .player-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    
+    :deep(.btn.btn-primary.btn-fullWidth) {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      min-height: 40px !important;
+      border-radius: 20px !important;
+      padding: 10px 16px !important;
+      transition: all 0.3s ease;
+      
+      filter: none !important;
+      -webkit-filter: none !important;
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.4);
+      }
+      
+      &:active:not(:disabled) {
+        transform: translateY(-1px);
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+    }
+  }
+}
+
+// === ДЕСКТОПНАЯ ВЕРСИЯ ===
+.desktop-layout {
+  .desktop-home-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 100;
+    overflow: hidden;
+    background: #ffffff !important;
+    border-radius: 20px;
+    
+    // Красивый оранжевый топ
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, $primary-color 0%, $accent-color 100%);
+      border-radius: 20px 20px 0 0;
+      z-index: 1;
+    }
+  }
+  
+  .desktop-home-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 101;
+    overflow: hidden;
+    padding: 40px 60px;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    box-shadow: 
+      0 40px 80px rgba(0, 0, 0, 0.12),
+      0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+  
+  .desktop-title {
+    font-size: 4.2em !important;
+    font-weight: 900 !important;
+    color: $primary-color !important;
+    margin-bottom: 40px !important;
+    line-height: 1.0 !important;
+    font-family: $font-family-display !important;
+    letter-spacing: -2px !important;
+    text-shadow: none !important;
+    text-align: center !important;
+    margin-top: 20px !important; // Отступ от оранжевой полоски
+    
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+  
+  .desktop-description {
+    font-size: 24px !important;
+    line-height: 1.4 !important;
+    color: #1a1a1a !important;
+    margin-bottom: 60px !important;
+    font-weight: 600 !important;
+    max-width: 650px !important;
+    letter-spacing: -0.5px !important;
+    text-align: center !important;
+    text-shadow: none !important;
+    
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+  
+  .desktop-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    
+    :deep(.btn) {
+      padding: 20px 40px !important;
+      font-size: 22px !important;
+      font-weight: 900 !important;
+      border-radius: 25px !important;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+      min-height: 70px !important;
+      min-width: 280px !important;
+      
+      filter: none !important;
+      -webkit-filter: none !important;
+      
+      &.btn-primary {
+        background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 8%) 100%) !important;
+        border: 4px solid darken($primary-color, 15%) !important;
+        color: white !important;
+        box-shadow: 
+          0 15px 35px rgba($primary-color, 0.3),
+          0 8px 20px rgba(0, 0, 0, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-4px) scale(1.02) !important;
+          box-shadow: 
+            0 20px 50px rgba($primary-color, 0.4),
+            0 12px 30px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        &:active:not(:disabled) {
+          transform: translateY(-2px) scale(1.01) !important;
+        }
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+    }
+  }
+}
+
+// === АДАПТАЦИИ ДЛЯ РАЗНЫХ РАЗМЕРОВ ПК ===
+
+// Планшеты (768px - 1024px)
+@media (min-width: 768px) and (max-width: 1024px) {
+  .desktop-layout {
+    .desktop-overlay {
+      border-radius: 18px;
+    }
+    
+    .desktop-home-content {
+      border-radius: 18px;
+      
+      &::before {
+        border-radius: 18px 18px 0 0;
+      }
+    }
+    
+    .desktop-home-container {
+      padding: 30px 40px;
+    }
+  }
+  
+  .desktop-title {
+    font-size: 3.2em !important;
+    margin-bottom: 30px !important;
+  }
+  
+  .desktop-description {
+    font-size: 20px !important;
+    margin-bottom: 45px !important;
+  }
+  
+  .desktop-form {
+    gap: 25px !important;
+    
+    :deep(.btn) {
+      padding: 16px 32px !important;
+      font-size: 18px !important;
+      min-height: 60px !important;
+      min-width: 240px !important;
+      border-radius: 20px !important;
+    }
+  }
+}
+
+// Средние десктопы (1024px - 1366px)
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .desktop-layout {
+    .desktop-overlay {
+      border-radius: 20px;
+    }
+    
+    .desktop-home-content {
+      border-radius: 20px;
+      
+      &::before {
+        border-radius: 20px 20px 0 0;
+      }
+    }
+    
+    .desktop-home-container {
+      padding: 35px 50px;
+    }
+  }
+  
+  .desktop-title {
+    font-size: 3.8em !important;
+    margin-bottom: 35px !important;
+  }
+  
+  .desktop-description {
+    font-size: 22px !important;
+    margin-bottom: 50px !important;
+  }
+  
+  .desktop-form {
+    :deep(.btn) {
+      padding: 18px 36px !important;
+      font-size: 20px !important;
+      min-height: 65px !important;
+      min-width: 260px !important;
+      border-radius: 22px !important;
+    }
+  }
+}
+
+// Большие экраны (1366px - 1600px)
+@media (min-width: 1367px) and (max-width: 1600px) {
+  .desktop-layout {
+    .desktop-overlay {
+      border-radius: 22px;
+    }
+    
+    .desktop-home-content {
+      border-radius: 22px;
+      
+      &::before {
+        border-radius: 22px 22px 0 0;
+      }
+    }
+    
+    .desktop-home-container {
+      padding: 50px 70px;
+    }
+  }
+  
+  .desktop-title {
+    font-size: 4.8em !important;
+    margin-bottom: 50px !important;
+  }
+  
+  .desktop-description {
+    font-size: 26px !important;
+    margin-bottom: 70px !important;
+  }
+  
+  .desktop-form {
+    gap: 35px !important;
+    
+    :deep(.btn) {
+      padding: 22px 44px !important;
+      font-size: 24px !important;
+      min-height: 75px !important;
+      min-width: 300px !important;
+      border-radius: 28px !important;
+    }
+  }
+}
+
+// Очень большие экраны (1600px+)
+@media (min-width: 1601px) {
+  .desktop-layout {
+    .desktop-overlay {
+      border-radius: 24px;
+    }
+    
+    .desktop-home-content {
+      border-radius: 24px;
+      
+      &::before {
+        border-radius: 24px 24px 0 0;
+      }
+    }
+    
+    .desktop-home-container {
+      padding: 60px 80px;
+    }
+  }
+  
+  .desktop-title {
+    font-size: 5.2em !important;
+    margin-bottom: 60px !important;
+  }
+  
+  .desktop-description {
+    font-size: 28px !important;
+    margin-bottom: 80px !important;
+  }
+  
+  .desktop-form {
+    gap: 40px !important;
+    
+    :deep(.btn) {
+      padding: 25px 50px !important;
+      font-size: 26px !important;
+      min-height: 80px !important;
+      min-width: 320px !important;
+      border-radius: 30px !important;
+    }
+  }
+}
+
+// Анимация пульсации для состояния загрузки
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+// === МОБИЛЬНЫЕ АДАПТАЦИИ ===
+@media (max-width: 360px) {
+  .mobile-layout {
+    .mobile-form-section {
+      max-width: 260px;
+      gap: 15px;
+    }
+    
+    .mobile-description {
+      font-size: 12px;
+    }
+    
+    :deep(.btn) {
+      font-size: 12px !important;
+      min-height: 36px !important;
+      padding: 8px 12px !important;
+      border-radius: 18px !important;
+    }
+  }
+}
+
+@media (max-height: 600px) {
+  .mobile-layout {
+    .mobile-content-wrapper {
+      padding: 4px 10px 10px 10px;
+    }
+    
+    .mobile-form-section {
+      gap: 15px;
+    }
+    
+    .mobile-description {
+      font-size: 12px;
+    }
+    
+    :deep(.btn) {
+      font-size: 12px !important;
+      min-height: 34px !important;
+      border-radius: 17px !important;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-mobile) and (orientation: landscape) and (max-height: 500px) {
+  .mobile-layout {
+    .mobile-content-wrapper {
+      padding: 2px 8px 8px 8px;
+    }
+    
+    .mobile-form-section {
+      gap: 10px;
+      max-width: 240px;
+    }
+    
+    .mobile-description {
+      font-size: 11px;
+    }
+    
+    :deep(.btn) {
+      font-size: 11px !important;
+      min-height: 30px !important;
+      border-radius: 15px !important;
+    }
+  }
+}
+
+@media (min-height: 800px) and (max-width: $breakpoint-mobile) {
+  .mobile-layout {
+    .mobile-content-wrapper {
+      padding: 8px 15px 15px 15px;
+    }
+    
+    .mobile-form-section {
+      max-width: 320px;
+      gap: 25px;
+    }
+    
+    .mobile-description {
+      font-size: 16px;
+    }
+    
+    :deep(.btn) {
+      font-size: 16px !important;
+      min-height: 46px !important;
+      padding: 12px 20px !important;
+      border-radius: 23px !important;
+    }
+  }
+}
+
+// УБИРАЕМ outline и фокусы
+* {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+button {
+  outline: none !important;
+  -webkit-appearance: none !important;
+  
+  &:focus {
+    outline: none !important;
+  }
+  
+  &:active {
+    outline: none !important;
   }
 }
 </style>

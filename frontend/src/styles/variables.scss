@@ -1,0 +1,169 @@
+// === FONTS FOR ENGLISH ===
+// Импорт Google Fonts через CSS (добавь в public/index.html)
+// <link rel="preconnect" href="https://fonts.googleapis.com">
+// <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+// <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+$font-family-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+$font-family-display: 'Nunito', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+
+// === COLORS ===
+$primary-color: #ff7e00;
+$secondary-color: #4a90e2;
+$accent-color: #ffd700;
+$text-color: #333;
+$background-color: #f9f9f9;
+$white: #ffffff;
+$success-color: #4CAF50;
+$error-color: #F44336;
+
+// === BREAKPOINTS ===
+$breakpoint-xs: 320px;
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1440px;
+
+// Legacy variables for compatibility
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+
+// === SPACING ===
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-small: 12px;
+$spacing-medium: 16px;
+$spacing-large: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+
+// === TYPOGRAPHY ===
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-normal: 16px;
+$font-size-lg: 18px;
+$font-size-large: 24px;
+$font-size-xl: 32px;
+$font-size-xxl: 48px;
+$font-size-huge: 64px;
+
+// === MIXINS ===
+@mixin mobile-only {
+  @media (max-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: $breakpoint-mobile + 1) and (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media (min-width: $breakpoint-desktop + 1) {
+    @content;
+  }
+}
+
+@mixin mobile-tablet {
+  @media (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin tablet-desktop {
+  @media (min-width: $breakpoint-tablet + 1) {
+    @content;
+  }
+}
+
+// Mobile viewport fix
+:root {
+  --vh: 1vh;
+}
+
+// === ГЛОБАЛЬНОЕ ОТКЛЮЧЕНИЕ СКРОЛЛА ДЛЯ МОБИЛЬНЫХ ===
+html, body {
+  @include mobile-only {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+}
+
+.video-container {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  
+  @include mobile-only {
+    height: calc(var(--vh, 1vh) * 100);
+    min-height: calc(var(--vh, 1vh) * 100);
+    max-height: calc(var(--vh, 1vh) * 100);
+    overflow: hidden;
+  }
+}
+
+// === RESPONSIVE UTILITIES ===
+.container {
+  width: 100%;
+  padding: 0 $spacing-medium;
+  margin: 0 auto;
+  
+  @media (min-width: $breakpoint-mobile) {
+    max-width: 480px;
+  }
+  
+  @media (min-width: $breakpoint-tablet) {
+    max-width: 720px;
+  }
+  
+  @media (min-width: $breakpoint-desktop) {
+    max-width: 960px;
+  }
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.hide-on-mobile {
+  @media (max-width: $breakpoint-mobile) {
+    display: none;
+  }
+}
+
+.hide-on-tablet {
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.show-on-mobile {
+  @media (min-width: $breakpoint-mobile + 1) {
+    display: none;
+  }
+}
+
+.hide-on-desktop {
+  @media (min-width: $breakpoint-desktop + 1) {
+    display: none;
+  }
+}
+
+.show-on-tablet {
+  @media (max-width: $breakpoint-mobile), (min-width: $breakpoint-desktop + 1) {
+    display: none;
+  }
+}
+
+.show-on-desktop {
+  @media (max-width: $breakpoint-desktop) {
+    display: none;
+  }
+}

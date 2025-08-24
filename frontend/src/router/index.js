@@ -1,65 +1,47 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/views/Home.vue';
-import Match from '@/views/Match.vue';
-import FastMatch from '@/views/FastMatch.vue';
-import Rating from '@/views/Rating.vue';
-import Profile from '@/views/Profile.vue';
-import Tournament from '@/views/Tournament.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/comic',
+    name: 'ComicReader',
+    component: () => import(/* webpackChunkName: "comic" */ '@/views/ComicReader.vue')
+  },
+  {
+    path: '/game',
+    name: 'MathGame', 
+    component: () => import(/* webpackChunkName: "game" */ '@/views/MathGame.vue')
+  },
+  {
+    path: '/rewards',
+    name: 'Rewards',
+    component: () => import(/* webpackChunkName: "rewards" */ '@/views/Rewards.vue')
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings.vue')
+  }
+]
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/match',
-      name: 'match',
-      component: Match
-    },
-    {
-      path: '/fast-match/:id',
-      name: 'fast-match',
-      component: FastMatch
-    },
-    {
-      path: '/tournament/:id',
-      name: 'tournament',
-      component: Tournament
-    },
-    {
-      path: '/rating',
-      name: 'rating',
-      component: Rating
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: Profile,
-      meta: { requiresAuth: true }
-    }
-  ]
-});
+  history: createWebHistory(process.env.BASE_URL),
+  routes
+})
 
-// Только профиль требует авторизацию
-router.beforeEach(async (to, from, next) => {
-  if (to.meta.requiresAuth) {
-    const { useAuthStore } = await import('@/stores/auth');
-    const authStore = useAuthStore();
-    
-    if (!authStore.isInitialized) {
-      await authStore.initializeAuth();
-    }
-    
-    if (!authStore.isAuthenticated) {
-      next('/');
-      return;
-    }
-  }
-  
-  next();
-});
+// Простые navigation guards без загрузочных экранов - ТОЛЬКО для логирования
+router.beforeEach((to, from, next) => {
+  console.log(`Router: Мгновенный переход с ${from.name} на ${to.name}`)
+  next()
+})
 
-export default router;
+router.afterEach((to, from) => {
+  console.log(`Router: Переход завершен на ${to.name} - видео уже загружены!`)
+})
+
+export default router
